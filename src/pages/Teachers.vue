@@ -126,7 +126,6 @@ export default {
   methods: {
     selectAllTeachers(){
       this.TeacherList.forEach(element => {element.select = true});
-      console.log(this.TeacherList);
     },
      insertManyTeachers(){
       //const values = this.Book;
