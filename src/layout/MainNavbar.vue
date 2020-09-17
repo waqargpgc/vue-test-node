@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { DropDown, Navbar, NavLink } from '@/components';
+import { Navbar } from '@/components';
 import { Popover } from 'element-ui';
 export default {
   name: 'main-navbar',
