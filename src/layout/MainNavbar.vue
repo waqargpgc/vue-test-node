@@ -67,9 +67,7 @@ export default {
     colorOnScroll: Number
   },
   components: {
-    DropDown,
     Navbar,
-    NavLink,
     [Popover.name]: Popover
   },
   methods:{
