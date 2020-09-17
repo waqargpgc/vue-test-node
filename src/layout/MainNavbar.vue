@@ -34,7 +34,7 @@
       <li class="nav-item" @click="logOut()">
           <router-link class="nav-link" to="/teachers">
           <i class="now-ui-icons ui-1_lock-circle-open"></i>
-          <p>Teachers</p>
+          <p>Logout</p>
          </router-link>
       </li>
       <!-- <drop-down
