@@ -31,7 +31,13 @@
           <p>Teachers</p>
          </router-link>
       </li>
-      <drop-down
+      <li class="nav-item" @click="logOut()">
+          <router-link class="nav-link" to="/teachers">
+          <i class="now-ui-icons ui-1_lock-circle-open"></i>
+          <p>Teachers</p>
+         </router-link>
+      </li>
+      <!-- <drop-down
               tag="li"
               title="Examples"
               icon="now-ui-icons design_image"
@@ -46,7 +52,7 @@
         <nav-link to="/profile">
           <i class="now-ui-icons users_single-02"></i> Profile
         </nav-link>
-      </drop-down>
+      </drop-down> -->
     </template>
   </navbar>
 </template>
@@ -69,6 +75,7 @@ export default {
   methods:{
     logOut(){
       localStorage.clear();
+      this.$router.push('/');
     }
   }
 };
