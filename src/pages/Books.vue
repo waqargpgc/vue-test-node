@@ -111,11 +111,11 @@ export default {
     },
     Getbooks() {
       ComponentService.getBooks().then((res) => {
-        //if (res.success) {
+        if (res.success) {
         this.BookLists = res.BooksList;
-        // } else {
-        //  this.Books = [];
-        //}
+        } else {
+         this.Books = [];
+        }
       });
     },
     Addbook() {
@@ -150,12 +150,12 @@ export default {
     },
     Deletebook(id) {
       ComponentService.deleteBook(id).then((res) => {
-        //if (res.success) {
+        if (res.success) {
           this.Getbooks();
-        //   alert(res.message);
-        // } else {
-        //   alert(res.message);
-        // }
+           alert(res.message);
+        } else {
+          alert(res.message);
+        }
       });
     },
   },

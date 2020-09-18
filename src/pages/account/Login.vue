@@ -69,7 +69,6 @@ export default {
         email: "",
         password: "",
       },
-      fullPage: false,
       UserInfo: {},
     };
   },
@@ -79,7 +78,7 @@ export default {
   methods: {
     LoginUser() {
       let loader = this.$loading.show({
-        container: this.fullPage,
+        container: false,
         canCancel: false,
       });
       AccountService.loginUser(this.login).then((res) => {
@@ -88,7 +87,7 @@ export default {
           loader.hide();
           localStorage.setItem("token", this.UserInfo.user.token);
           localStorage.setItem("_id", this.UserInfo.user._id);
-          this.$toasted.global.my_messges();
+          this.$toasted.global.my_messges({ message: res.message });
           this.$router.push("/index");
           window.location.reload();
         } else {

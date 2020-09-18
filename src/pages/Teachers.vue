@@ -133,12 +133,22 @@ export default {
       this.Teacher = {};
     },
     Getbooks() {
-      ComponentService.getBooks().then((res) => this.BookLists = res.BooksList);
+      ComponentService.getBooks().then((res) =>{ 
+        if (res.success) {
+        this.BookLists = res.BooksList;
+        }else{
+          this.BookLists = [];
+        }
+        })
     },
     GetTeachers() {
       ComponentService.getTeachers().then((res) => { 
+        if (res.success) {
         this.TeacherList = res.teacherList;
         this.TeacherList.forEach(element => {element.select = false});
+        }else{
+         this.TeacherList = []; 
+        }
       });
     },
     Addteacher() {

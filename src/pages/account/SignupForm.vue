@@ -96,12 +96,22 @@ export default {
   },
   methods: {
     SignUpUser() {
+       let loader = this.$loading.show({
+        container: false,
+        canCancel: false,
+      });
       AccountService.signUpUser(this.user).then((res) => {
         if (res.success) {
-          alert(res.message);
+          loader.hide();
+          this.$toasted.global.my_messges({ message: res.message });
           this.$router.push("/");
         } else {
-          alert(res.message);
+          loader.hide();
+          if (!res.message) {
+            this.$toasted.global.my_messges();
+          } else {
+            this.$toasted.global.my_messges({ message: res.message });
+          }
         }
       });
     },
