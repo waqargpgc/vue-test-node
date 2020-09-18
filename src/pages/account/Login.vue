@@ -78,20 +78,18 @@ export default {
   methods: {
     LoginUser() {
       let loader = this.$loading.show({
-        container: false,
         canCancel: false,
       });
       AccountService.loginUser(this.login).then((res) => {
+        loader.hide();
         this.UserInfo = res.data;
         if (res.success) {
-          loader.hide();
           localStorage.setItem("token", this.UserInfo.user.token);
           localStorage.setItem("_id", this.UserInfo.user._id);
           this.$toasted.global.my_messges({ message: res.message });
           this.$router.push("/index");
           window.location.reload();
         } else {
-          loader.hide();
           if (!res.message) {
             this.$toasted.global.my_messges();
           } else {

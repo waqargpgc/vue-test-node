@@ -9,12 +9,19 @@ import SignupForm from './pages/account/SignupForm.vue';
 import Profile from './pages/Profile.vue';
 import MainNavbar from './layout/MainNavbar.vue';
 import MainFooter from './layout/MainFooter.vue';
-
 Vue.use(Router);
 
 export default new Router({
   linkExactActiveClass: 'active',
   routes: [
+    {
+      path: '/login',
+      name: 'login',
+      components: { default: Login },
+      props: {
+        header: { colorOnScroll: 400 }
+      }
+    },
     {
       path: '/',
       name: 'login',
@@ -34,6 +41,7 @@ export default new Router({
     {
       path: '/index',
       name: 'index',
+      beforeEnter: guardMyroute,
       components: { default: Index, header: MainNavbar, footer: MainFooter },
       props: {
         header: { colorOnScroll: 400 },
@@ -43,6 +51,7 @@ export default new Router({
     {
       path: '/books',
       name: 'books',
+      beforeEnter: guardMyroute,
       components: { default: Books, header: MainNavbar, footer: MainFooter },
       props: {
         header: { colorOnScroll: 400 },
@@ -52,6 +61,7 @@ export default new Router({
     {
       path: '/teachers',
       name: 'teachers',
+      beforeEnter: guardMyroute,
       components: { default: Teachers, header: MainNavbar, footer: MainFooter },
       props: {
         header: { colorOnScroll: 400 },
@@ -85,3 +95,17 @@ export default new Router({
     }
   }
 });
+function guardMyroute(to, from, next) {
+  var isAuthenticated = false;
+  if (localStorage.getItem('token') && localStorage.getItem('_id')) {
+    isAuthenticated = true;
+  } else {
+    isAuthenticated = false;
+  }
+  if (isAuthenticated) {
+    next(true)
+  }
+  else {
+    next(false);
+  }
+}

@@ -40,7 +40,7 @@ Vue.toasted.register('my_messges',
     	    return "Oops.. Something Went Wrong.."
         }
         // if there is a message show it with the message
-        return "Oops.. " + payload.message;
+        return payload.message;
     },
 );
 

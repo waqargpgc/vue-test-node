@@ -110,7 +110,11 @@ export default {
       }
     },
     Getbooks() {
+      let loader = this.$loading.show({
+        canCancel: false,
+      });
       ComponentService.getBooks().then((res) => {
+        loader.hide();
         if (res.success) {
         this.BookLists = res.BooksList;
         } else {
@@ -123,38 +127,50 @@ export default {
         if (this.Book.b_name !== undefined) {
           this.insertManyBook.push(this.Book);
         }
+        let loader = this.$loading.show({
+        canCancel: false,
+      });
         ComponentService.addBook(this.insertManyBook).then((res) => {
+          loader.hide();
           if (res.success) {
             this.Getbooks();
             this.insertManyBook = [];
             this.Book = {};
-            alert(res.message);
+             this.$toasted.global.my_messges({ message: res.message });
           } else {
-            alert(res.message);
+             this.$toasted.global.my_messges({ message: res.message });
           }
         });
       } else {
+        let loader = this.$loading.show({
+        canCancel: false,
+      });
         this.insertManyBook = [];
         this.insertManyBook.push(this.Book);
          ComponentService.updateBook(this.insertManyBook).then((res) => {
+           loader.hide();
           if (res.success) {
             this.Getbooks();
             this.Book = {};
             this.insertManyBook = [];
-            alert(res.message);
+            this.$toasted.global.my_messges({ message: res.message });
           } else {
-            alert(res.message);
+             this.$toasted.global.my_messges({ message: res.message });
           }
         });
       }
     },
     Deletebook(id) {
+      let loader = this.$loading.show({
+        canCancel: false,
+      });
       ComponentService.deleteBook(id).then((res) => {
+        loader.hide();
         if (res.success) {
           this.Getbooks();
-           alert(res.message);
+           this.$toasted.global.my_messges({ message: res.message });
         } else {
-          alert(res.message);
+          this.$toasted.global.my_messges({ message: res.message });
         }
       });
     },

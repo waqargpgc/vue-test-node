@@ -133,7 +133,11 @@ export default {
       this.Teacher = {};
     },
     Getbooks() {
+      let loader = this.$loading.show({
+        canCancel: false,
+      });
       ComponentService.getBooks().then((res) =>{ 
+        loader.hide();
         if (res.success) {
         this.BookLists = res.BooksList;
         }else{
@@ -142,7 +146,11 @@ export default {
         })
     },
     GetTeachers() {
+      let loader = this.$loading.show({
+        canCancel: false,
+      });
       ComponentService.getTeachers().then((res) => { 
+        loader.hide();
         if (res.success) {
         this.TeacherList = res.teacherList;
         this.TeacherList.forEach(element => {element.select = false});
@@ -152,43 +160,52 @@ export default {
       });
     },
     Addteacher() {
+       let loader = this.$loading.show({
+        canCancel: false,
+      });
       if (!this.Teacher._id) {
          if (this.Teacher.t_name !== undefined) {
           this.insertManyTeacher.push(this.Teacher);
         }
         ComponentService.addTeacher(this.insertManyTeacher).then((res) => {
+          loader.hide();
           if (res.success) {
             this.GetTeachers();
             this.insertManyTeacher = [];
             this.Teacher = {};
-            alert(res.message);
+            this.$toasted.global.my_messges({ message: res.message });
           } else {
-            alert(res.message);
+           this.$toasted.global.my_messges({ message: res.message });
           }
         });
       } else {
         this.insertManyTeacher =[];
          this.insertManyTeacher.push(this.Teacher);
         ComponentService.updateTeacher(this.insertManyTeacher).then((res) => {
+          loader.hide();
           if (res.success) {
             this.GetTeachers();
             this.Teacher = {};
             this.insertManyTeacher =[];
-            alert(res.message);
+           this.$toasted.global.my_messges({ message: res.message });
           } else {
-            alert(res.message);
+           this.$toasted.global.my_messges({ message: res.message });
           }
         });
       }
     },
     DeleteTeacher(id) {
+       let loader = this.$loading.show({
+        canCancel: false,
+      });
       ComponentService.deleteTeacher(id).then((res) => {
-        //if (res.success) {
+        loader.hide();
+        if (res.success) {
           this.GetTeachers();
-         // alert(res.message);
-        // } else {
-        //   alert(res.message);
-        // }
+        this.$toasted.global.my_messges({ message: res.message });
+        } else {
+         this.$toasted.global.my_messges({ message: res.message });
+        }
       });
     },
   },

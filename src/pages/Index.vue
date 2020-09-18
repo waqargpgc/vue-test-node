@@ -66,7 +66,13 @@ export default {
 		},
   methods: {
     GetOneUser() {
-      AccountService.oneUser().then((res) => {this.User = res.user;});
+       let loader = this.$loading.show({
+        canCancel: false,
+      });
+      AccountService.oneUser().then((res) => {
+        loader.hide();
+        this.User = res.user;
+        });
     },
   },
 };
