@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default {
     //API_URL : "http://localhost:4000/",
-    API_URL : "https://secure-dawn-02653.herokuapp.com/",
+    API_URL : "https://node-test-app-v1.herokuapp.com/",
     proxyurl : "https://cors-anywhere.herokuapp.com/",
 
     header:{
