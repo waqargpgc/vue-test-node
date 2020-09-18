@@ -5,6 +5,6 @@ module.exports = {
   // },
   devServer: {
   //  proxy: 'http://localhost:4000/',
-    proxy: 'https://secure-dawn-02653.herokuapp.com/',
+    proxy: 'https://node-test-app-v1.herokuapp.com/',
 }
 };
