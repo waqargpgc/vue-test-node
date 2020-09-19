@@ -15,7 +15,7 @@ export default {
         return axios.post(this.API_URL+'book',data,{headers:this.header}).then(res => res.data);
     },
     updateBook(data) {
-        return axios.put(this.API_URL+'book/'+data._id,data,{headers:this.header}).then(res => res.data);
+        return axios.put(this.API_URL+'book/'+data[0]._id,data,{headers:this.header}).then(res => res.data);
     },
     getBooks() {
         return axios.get(this.API_URL+'book',{headers:this.header}).then(res => res.data);
@@ -30,7 +30,7 @@ export default {
         return axios.post(this.API_URL+'teacher',data,{headers:this.header}).then(res => res.data);
     },
     updateTeacher(data) {
-        return axios.put(this.API_URL+'teacher/'+data._id,data,{headers:this.header}).then(res => res.data);
+        return axios.put(this.API_URL+'teacher/'+data[0]._id,data,{headers:this.header}).then(res => res.data);
     },
     deleteTeacher(id) {
         return axios.delete(this.API_URL+'teacher/'+id,{headers:this.header}).then(res => res.data);
