@@ -179,9 +179,7 @@ export default {
           }
         });
       } else {
-        this.insertManyTeacher =[];
-         this.insertManyTeacher.push(this.Teacher);
-        ComponentService.updateTeacher(this.insertManyTeacher).then((res) => {
+        ComponentService.updateTeacher(this.Teacher).then((res) => {
           loader.hide();
           if (res.success) {
             this.GetTeachers();

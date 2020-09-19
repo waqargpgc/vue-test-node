@@ -123,13 +123,13 @@ export default {
       });
     },
     Addbook() {
+      let loader = this.$loading.show({
+        canCancel: false,
+      });
       if (!this.Book._id) {
         if (this.Book.b_name !== undefined) {
           this.insertManyBook.push(this.Book);
         }
-        let loader = this.$loading.show({
-        canCancel: false,
-      });
         ComponentService.addBook(this.insertManyBook).then((res) => {
           loader.hide();
           if (res.success) {
@@ -142,12 +142,8 @@ export default {
           }
         });
       } else {
-        let loader = this.$loading.show({
-        canCancel: false,
-      });
-        this.insertManyBook = [];
-        this.insertManyBook.push(this.Book);
-         ComponentService.updateBook(this.insertManyBook).then((res) => {
+       // this.insertManyBook.push(this.Book);
+         ComponentService.updateBook(this.Book).then((res) => {
            loader.hide();
           if (res.success) {
             this.Getbooks();
