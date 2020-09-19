@@ -134,6 +134,9 @@ export default {
     },
      onEditModal(values) {
       this.Teacher = values;
+      if(this.Teacher.t_book._id){
+        this.Teacher.t_book = this.Teacher.t_book._id;
+      }
     },
     Getbooks() {
       let loader = this.$loading.show({
