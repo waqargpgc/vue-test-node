@@ -132,6 +132,9 @@ export default {
       this.insertManyTeacher.push(this.Teacher);
       this.Teacher = {};
     },
+     onEditModal(values) {
+      this.Teacher = values;
+    },
     Getbooks() {
       let loader = this.$loading.show({
         canCancel: false,
