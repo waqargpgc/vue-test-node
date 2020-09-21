@@ -23,6 +23,7 @@ import VueMoment from 'vue-moment'
 import { BootstrapVue } from 'bootstrap-vue';
 import Toasted from 'vue-toasted';
 import Loading from 'vue-loading-overlay';
+import Vuelidate from 'vuelidate'
 // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
 
@@ -49,6 +50,7 @@ Vue.use(VueMoment)
 Vue.use(BootstrapVue)
 Vue.use(NowUiKit);
 Vue.use(Loading);
+Vue.use(Vuelidate);
 new Vue({
   router,
   render: h => h(App)

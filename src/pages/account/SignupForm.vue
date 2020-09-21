@@ -21,52 +21,77 @@
             </div>
           </template>
           <template>
-            <fg-input
-              v-model="user.name"
-              class="no-border"
-              placeholder="Name..."
-              addon-left-icon="now-ui-icons users_circle-08"
-            ></fg-input>
-            <fg-input
-              v-model="user.email"
-              class="no-border"
-              placeholder="Email"
-              addon-left-icon="now-ui-icons ui-1_email-85"
-            ></fg-input>
+            <div>
+               <small class="text-center"
+                v-if="!$v.user.name.required && $v.user.name.$dirty"
+              >Name is required</small>
+              <fg-input
+                v-model="user.name"
+                class="no-border"
+                placeholder="Name..."
+                addon-left-icon="now-ui-icons users_circle-08"
+              ></fg-input>
+            </div>
+            <div>
+              <small class="text-center"
+                v-if="(!$v.user.email.required || !$v.user.email.email) && $v.user.email.$dirty"
+              >Email is required</small>
+                <fg-input
+                  v-model="user.email"
+                  class="no-border"
+                  placeholder="Email"
+                  addon-left-icon="now-ui-icons ui-1_email-85"
+                ></fg-input>
+            </div>
+
             <div class="form-group no-border input-group">
+               <small class="text-center"
+                v-if="!$v.user.role.required && $v.user.role.$dirty"
+              >Role is required</small>
               <div class="input-group">
                 <div class="input-group-prepend">
                   <i class="input-group-text now-ui-icons users_circle-08"></i>
                 </div>
-                <select 
-                 aria-describedby="addon-right addon-left"
+                <select
+                  aria-describedby="addon-right addon-left"
                   placeholder="Name..."
-                  class="form-control" v-model="user.role"
-                  >
-                <option disabled value>Please select role</option>
-                <option>admin</option>
-                <option>other</option>
-              </select>
+                  class="form-control"
+                  v-model="user.role"
+                >
+                  <option disabled value>Please select role</option>
+                  <option>admin</option>
+                  <option>other</option>
+                </select>
               </div>
             </div>
-            <fg-input
-              v-model="user.password"
-              type="password"
-              class="no-border"
-              placeholder="Password..."
-              addon-left-icon="now-ui-icons ui-1_lock-circle-open"
-            ></fg-input>
+            <div>
+               <small class="text-center"
+                    v-if="!$v.user.password.required && $v.user.password.$dirty"
+                  >Password is required</small>
+                  <small class="text-center"
+                    v-if="!$v.user.password.minLength"
+                  >Password must be greater then 5 chac</small>
+              <fg-input
+                v-model="user.password"
+                type="password"
+                class="no-border"
+                placeholder="Password..."
+                addon-left-icon="now-ui-icons ui-1_lock-circle-open"
+              ></fg-input>
+                </div>
           </template>
           <div class="card-footer text-center">
             <n-button @click.prevent="SignUpUser" type="neutral" round size="md">Get Started</n-button>
           </div>
-          <div class="pull-left">
-            <router-link to="/">
-              <a class="link footer-link">Login</a>
-            </router-link>
-          </div>
-          <div class="pull-right">
-            <a href="#pablo" class="link footer-link">Need Help?</a>
+          <div class="card-footer pb-4">
+            <div class="pull-left">
+              <router-link to="/">
+                <a class="link footer-link">Login</a>
+              </router-link>
+            </div>
+            <div class="pull-right">
+              <a href="#pablo" class="link footer-link">Need Help?</a>
+            </div>
           </div>
         </card>
       </div>
@@ -76,6 +101,7 @@
 <script>
 import { Card, FormGroupInput, Button } from "@/components";
 import AccountService from "./../../service/AccountService";
+const { required, minLength, email } = require("vuelidate/lib/validators");
 export default {
   components: {
     Card,
@@ -94,9 +120,29 @@ export default {
       UserInfo: {},
     };
   },
+  validations: {
+    user: {
+      name: {
+        required,
+      },
+      role: {
+        required,
+      },
+      password: {
+        required,
+        minLength: minLength(5),
+      },
+      email: {
+        required,
+        email,
+      },
+    },
+  },
   methods: {
     SignUpUser() {
-       let loader = this.$loading.show({
+       this.$v.$touch();
+      if (!this.$v.$invalid) {
+      let loader = this.$loading.show({
         canCancel: false,
       });
       AccountService.signUpUser(this.user).then((res) => {
@@ -112,12 +158,16 @@ export default {
           }
         }
       });
+    }
     },
   },
 };
 </script>
-<style>
+<style scoped>
 select option {
   color: black !important;
+}
+small {
+    font-size: 80%;
 }
 </style>

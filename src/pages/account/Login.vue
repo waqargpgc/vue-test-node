@@ -9,22 +9,39 @@
               <div slot="header" class="logo-container">
                 <img v-lazy="'img/now-logo.png'" alt />
               </div>
+              <form @submit.prevent="LoginUser">
+                <div>
+                  <fg-input
+                    v-model="login.email"
+                    class="no-border input-lg"
+                    addon-left-icon="now-ui-icons ui-1_email-85"
+                    placeholder="Email..."
+                  ></fg-input>
+                  <small
+                    class="text-danger"
+                    v-if="(!$v.login.email.required || !$v.login.email.email) && $v.login.email.$dirty"
+                  >Email is required</small>
+                </div>
 
-              <fg-input
-                v-model="login.email"
-                class="no-border input-lg"
-                addon-left-icon="now-ui-icons ui-1_email-85"
-                placeholder="Email..."
-              ></fg-input>
+                <div>
+                  <fg-input
+                    v-model="login.password"
+                    type="password"
+                    class="no-border input-lg"
+                    addon-left-icon="now-ui-icons ui-1_lock-circle-open"
+                    placeholder="Password..."
+                  ></fg-input>
 
-              <fg-input
-                v-model="login.password"
-                type="password"
-                class="no-border input-lg"
-                addon-left-icon="now-ui-icons ui-1_lock-circle-open"
-                placeholder="Password..."
-              ></fg-input>
-
+                  <small
+                    class="text-danger"
+                    v-if="!$v.login.password.required && $v.login.password.$dirty"
+                  >Password is required</small>
+                  <small
+                    class="text-danger"
+                    v-if="!$v.login.password.minLength"
+                  >Password must be greater then 5 chac</small>
+                </div>
+              </form>
               <template slot="raw-content">
                 <div class="card-footer text-center">
                   <a
@@ -55,6 +72,7 @@
 <script>
 import { Card, Button, FormGroupInput } from "@/components";
 import AccountService from "./../../service/AccountService";
+const { required, minLength, email } = require("vuelidate/lib/validators");
 export default {
   name: "login-page",
   bodyClass: "login-page",
@@ -72,33 +90,55 @@ export default {
       UserInfo: {},
     };
   },
+  validations: {
+    login: {
+      password: {
+        required,
+        minLength: minLength(5),
+      },
+      email: {
+        required,
+        email,
+      },
+    },
+  },
   mounted() {
     localStorage.clear();
   },
   methods: {
     LoginUser() {
-      let loader = this.$loading.show({
-        canCancel: false,
-      });
-      AccountService.loginUser(this.login).then((res) => {
-        loader.hide();
-        this.UserInfo = res.data;
-        if (res.success) {
-          localStorage.setItem("token", this.UserInfo.user.token);
-          localStorage.setItem("_id", this.UserInfo.user._id);
-          this.$toasted.global.my_messges({ message: res.message });
-          this.$router.push("/index");
-          window.location.reload();
-        } else {
-          if (!res.message) {
-            this.$toasted.global.my_messges();
-          } else {
+      this.$v.$touch();
+      if (!this.$v.$invalid) {
+        let loader = this.$loading.show({
+          canCancel: false,
+        });
+        AccountService.loginUser(this.login).then((res) => {
+          loader.hide();
+          this.UserInfo = res.data;
+          if (res.success) {
+            localStorage.setItem("token", this.UserInfo.user.token);
+            localStorage.setItem("_id", this.UserInfo.user._id);
             this.$toasted.global.my_messges({ message: res.message });
+            this.$router.push("/index");
+            window.location.reload();
+          } else {
+            if (!res.message) {
+              this.$toasted.global.my_messges();
+            } else {
+              this.$toasted.global.my_messges({ message: res.message });
+            }
           }
-        }
-      });
+        });
+      }
     },
   },
 };
 </script>
-<style></style>
+<style scoped>
+.input-group, .form-group {
+   margin-bottom: 10px !important;
+}
+small {
+    font-size: 80%;
+}
+</style>
