@@ -93,16 +93,15 @@
               There is No Book in Data Base
             </tr>
             <tr>
-              <td>
-                Total -{{totalElement}}
-              </td>
+              <td>Total #{{ totalElement }}</td>
               <td colspan="6">
-              <b-pagination class="pull-right"
-                v-model="page"
-                :per-page="pageSize"
-                :total-rows="totalElement"
-                v-on:input="updatePage(page)"
-              ></b-pagination>
+                <b-pagination
+                  class="pull-right"
+                  v-model="page"
+                  :per-page="pageSize"
+                  :total-rows="totalElement"
+                  v-on:input="updatePage(page)"
+                ></b-pagination>
               </td>
             </tr>
           </tbody>
@@ -123,7 +122,7 @@ export default {
     return {
       page: 1,
       pageSize: 10,
-      totalElement: 20,
+      totalElement: 0,
       Book: {
         b_name: "",
         b_auther: "",
@@ -137,7 +136,7 @@ export default {
     this.Getbooks();
   },
   methods: {
-     updatePage(page) {
+    updatePage(page) {
       this.Getbooks();
     },
     insertManyBooks() {
@@ -160,7 +159,8 @@ export default {
       ComponentService.getBooks(this.page, this.pageSize).then((res) => {
         loader.hide();
         if (res.success) {
-          this.BookLists = res.BooksList;
+          this.BookLists = res.BooksList.books;
+          this.totalElement = res.BooksList.totalCount;
         } else {
           this.Books = [];
         }
@@ -174,30 +174,40 @@ export default {
         if (this.Book.b_name !== undefined) {
           this.insertManyBook.push(this.Book);
         }
-        ComponentService.addBook(this.insertManyBook).then((res) => {
-          loader.hide();
-          if (res.success) {
-            this.Getbooks();
-            this.insertManyBook = [];
-            this.Book = {};
-            this.$toasted.global.my_messges({ message: res.message });
-          } else {
-            this.$toasted.global.my_messges({ message: res.message });
-          }
-        });
+        ComponentService.addBook(this.insertManyBook)
+          .then((res) => {
+            loader.hide();
+            if (res.success) {
+              this.Getbooks();
+              this.insertManyBook = [];
+              this.Book = {};
+              this.$toasted.global.my_messges({ message: res.message });
+            } else {
+              this.$toasted.global.my_messges({ message: res.message });
+            }
+          })
+          .catch((error) => {
+            loader.hide();
+            this.$toasted.global.my_messges({ message: error.response.data.message });
+          });
       } else {
         // this.insertManyBook.push(this.Book);
-        ComponentService.updateBook(this.Book).then((res) => {
-          loader.hide();
-          if (res.success) {
-            this.Getbooks();
-            this.Book = {};
-            this.insertManyBook = [];
-            this.$toasted.global.my_messges({ message: res.message });
-          } else {
-            this.$toasted.global.my_messges({ message: res.message });
-          }
-        });
+        ComponentService.updateBook(this.Book)
+          .then((res) => {
+            loader.hide();
+            if (res.success) {
+              this.Getbooks();
+              this.Book = {};
+              this.insertManyBook = [];
+              this.$toasted.global.my_messges({ message: res.message });
+            } else {
+              this.$toasted.global.my_messges({ message: res.message });
+            }
+          })
+          .catch((error) => {
+            loader.hide();
+            this.$toasted.global.my_messges({ message: error.response.data.message });
+          });
       }
     },
     Deletebook(id) {

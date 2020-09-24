@@ -103,7 +103,7 @@
               <td>{{ teacher.t_name }}</td>
               <td>{{ teacher.t_phone }}</td>
               <td>{{ teacher.t_email }}</td>
-              <td>{{ teacher.t_book ? teacher.t_book.b_name: "" }}</td>
+              <td>{{ teacher.t_book ? teacher.t_book.b_name : "" }}</td>
               <td>{{ teacher.createdBy.name }}</td>
               <td>
                 <i
@@ -121,7 +121,7 @@
               There is No Teacher in Data Base
             </tr>
             <tr>
-              <td>Total -{{ totalElement }}</td>
+              <td>Total #{{ totalElement }}</td>
               <td colspan="8">
                 <b-pagination
                   class="pull-right"
@@ -148,7 +148,7 @@ export default {
     return {
       page: 1,
       pageSize: 10,
-      totalElement: 20,
+      totalElement: 0,
       Teacher: {
         t_name: "",
         t_email: "",
@@ -170,7 +170,7 @@ export default {
       this.GetTeachers();
     },
     selectAllTeachers() {
-      this.TeacherList.forEach((element) => {
+      this.TeacherList.teachers.forEach((element) => {
         element.select = true;
       });
     },
@@ -189,10 +189,10 @@ export default {
       let loader = this.$loading.show({
         canCancel: false,
       });
-      ComponentService.getBooks(0,0).then((res) => {
+      ComponentService.getBooks(1, 30).then((res) => {
         loader.hide();
         if (res.success) {
-          this.BookLists = res.BooksList;
+          this.BookLists = res.BooksList.books;
         } else {
           this.BookLists = [];
         }
@@ -205,10 +205,11 @@ export default {
       ComponentService.getTeachers(this.page, this.pageSize).then((res) => {
         loader.hide();
         if (res.success) {
-          this.TeacherList = res.teacherList;
-          this.TeacherList.forEach((element) => {
-            element.select = false;
-          });
+          this.TeacherList = res.teacherList.teachers;
+          this.totalElement = res.teacherList.totalCount;
+          // this.TeacherList.teachers.forEach((element) => {
+          //   element.select = false;
+          // });
         } else {
           this.TeacherList = [];
         }
@@ -222,29 +223,43 @@ export default {
         if (this.Teacher.t_name !== undefined) {
           this.insertManyTeacher.push(this.Teacher);
         }
-        ComponentService.addTeacher(this.insertManyTeacher).then((res) => {
-          loader.hide();
-          if (res.success) {
-            this.GetTeachers();
-            this.insertManyTeacher = [];
-            this.Teacher = {};
-            this.$toasted.global.my_messges({ message: res.message });
-          } else {
-            this.$toasted.global.my_messges({ message: res.message });
-          }
-        });
+        ComponentService.addTeacher(this.insertManyTeacher)
+          .then((res) => {
+            loader.hide();
+            if (res.success) {
+              this.GetTeachers();
+              this.insertManyTeacher = [];
+              this.Teacher = {};
+              this.$toasted.global.my_messges({ message: res.message });
+            } else {
+              this.$toasted.global.my_messges({ message: res.message });
+            }
+          })
+          .catch((error) => {
+            loader.hide();
+            this.$toasted.global.my_messges({
+              message: error.response.data.message,
+            });
+          });
       } else {
-        ComponentService.updateTeacher(this.Teacher).then((res) => {
-          loader.hide();
-          if (res.success) {
-            this.GetTeachers();
-            this.Teacher = {};
-            this.insertManyTeacher = [];
-            this.$toasted.global.my_messges({ message: res.message });
-          } else {
-            this.$toasted.global.my_messges({ message: res.message });
-          }
-        });
+        ComponentService.updateTeacher(this.Teacher)
+          .then((res) => {
+            loader.hide();
+            if (res.success) {
+              this.GetTeachers();
+              this.Teacher = {};
+              this.insertManyTeacher = [];
+              this.$toasted.global.my_messges({ message: res.message });
+            } else {
+              this.$toasted.global.my_messges({ message: res.message });
+            }
+          })
+          .catch((error) => {
+            loader.hide();
+            this.$toasted.global.my_messges({
+              message: error.response.data.message,
+            });
+          });
       }
     },
     DeleteTeacher(id) {
