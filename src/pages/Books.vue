@@ -1,10 +1,19 @@
 <template>
   <div>
-    <b-modal id="modal-no-backdrop" hide-backdrop content-class="shadow" title="Add Book">
+    <b-modal
+      id="modal-no-backdrop"
+      hide-backdrop
+      content-class="shadow"
+      title="Add Book"
+    >
       <p class="my-2">
         <template>
           <div class="form-group">
-            <input v-model="Book.b_name" class="form-control form-control-sm" placeholder="Name..." />
+            <input
+              v-model="Book.b_name"
+              class="form-control form-control-sm"
+              placeholder="Name..."
+            />
           </div>
           <div class="form-group">
             <input
@@ -14,19 +23,28 @@
             />
           </div>
           <div class="form-group">
-            <input v-model="Book.publish_date" type="date" class="form-control form-control-sm" />
+            <input
+              v-model="Book.publish_date"
+              type="date"
+              class="form-control form-control-sm"
+            />
           </div>
         </template>
       </p>
 
       <template v-slot:modal-footer="{ hide }">
         <b-button size="sm" variant="success" @click="Addbook()">OK</b-button>
-        <b-button size="sm" class="btn-warning" @click="insertManyBooks()">Add Multiple</b-button>
+        <b-button size="sm" class="btn-warning" @click="insertManyBooks()"
+          >Add Multiple</b-button
+        >
         <b-button size="sm" variant="danger" @click="hide()">Cancel</b-button>
       </template>
     </b-modal>
     <div class="page-header clear-filter" filter-color="orange">
-      <parallax class="page-header-image" style="background-image:url('img/header.jpg')"></parallax>
+      <parallax
+        class="page-header-image"
+        style="background-image: url('img/header.jpg')"
+      ></parallax>
       <div class="container mt-5">
         <div class="content-center brand">
           <h1 class="h1-seo">Books.</h1>
@@ -39,7 +57,8 @@
           size="sm"
           variant="success"
           v-b-modal.modal-no-backdrop
-        >Add Book</b-button>
+          >Add Book</b-button
+        >
         <table class="table table-striped">
           <thead>
             <tr>
@@ -53,21 +72,39 @@
           </thead>
           <tbody>
             <tr v-for="(book, index) in BookLists" :key="book._id">
-              <td>{{index+1}}</td>
-              <td>{{book.b_name}}</td>
-              <td>{{book.b_auther}}</td>
-              <td>{{book.publish_date | moment("DD/MM/YYYY")}}</td>
-              <td>{{book.createdBy.name}}</td>
+              <td>{{ index + 1 }}</td>
+              <td>{{ book.b_name }}</td>
+              <td>{{ book.b_auther }}</td>
+              <td>{{ book.publish_date | moment("DD/MM/YYYY") }}</td>
+              <td>{{ book.createdBy.name }}</td>
               <td>
                 <i
                   v-b-modal.modal-no-backdrop
                   @click="onEditModal(book)"
                   class="now-ui-icons ui-2_settings-90 mr-2"
                 ></i>
-                <i @click="Deletebook(book._id)" class="now-ui-icons ui-1_simple-remove"></i>
+                <i
+                  @click="Deletebook(book._id)"
+                  class="now-ui-icons ui-1_simple-remove"
+                ></i>
               </td>
             </tr>
-            <tr class="content-center" v-if="BookLists.length == 0">There is No Book in Data Base</tr>
+            <tr class="content-center" v-if="BookLists.length == 0">
+              There is No Book in Data Base
+            </tr>
+            <tr>
+              <td>
+                Total -{{totalElement}}
+              </td>
+              <td colspan="6">
+              <b-pagination class="pull-right"
+                v-model="page"
+                :per-page="pageSize"
+                :total-rows="totalElement"
+                v-on:input="updatePage(page)"
+              ></b-pagination>
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -78,11 +115,15 @@
 <script>
 import { Tooltip } from "element-ui";
 import ComponentService from "./../service/ComponentService";
+
 export default {
   [Tooltip.name]: Tooltip,
   name: "books",
   data() {
     return {
+      page: 1,
+      pageSize: 10,
+      totalElement: 20,
       Book: {
         b_name: "",
         b_auther: "",
@@ -96,6 +137,9 @@ export default {
     this.Getbooks();
   },
   methods: {
+     updatePage(page) {
+      this.Getbooks();
+    },
     insertManyBooks() {
       //const values = this.Book;
       this.insertManyBook.push(this.Book);
@@ -113,12 +157,12 @@ export default {
       let loader = this.$loading.show({
         canCancel: false,
       });
-      ComponentService.getBooks().then((res) => {
+      ComponentService.getBooks(this.page, this.pageSize).then((res) => {
         loader.hide();
         if (res.success) {
-        this.BookLists = res.BooksList;
+          this.BookLists = res.BooksList;
         } else {
-         this.Books = [];
+          this.Books = [];
         }
       });
     },
@@ -136,22 +180,22 @@ export default {
             this.Getbooks();
             this.insertManyBook = [];
             this.Book = {};
-             this.$toasted.global.my_messges({ message: res.message });
+            this.$toasted.global.my_messges({ message: res.message });
           } else {
-             this.$toasted.global.my_messges({ message: res.message });
+            this.$toasted.global.my_messges({ message: res.message });
           }
         });
       } else {
-       // this.insertManyBook.push(this.Book);
-         ComponentService.updateBook(this.Book).then((res) => {
-           loader.hide();
+        // this.insertManyBook.push(this.Book);
+        ComponentService.updateBook(this.Book).then((res) => {
+          loader.hide();
           if (res.success) {
             this.Getbooks();
             this.Book = {};
             this.insertManyBook = [];
             this.$toasted.global.my_messges({ message: res.message });
           } else {
-             this.$toasted.global.my_messges({ message: res.message });
+            this.$toasted.global.my_messges({ message: res.message });
           }
         });
       }
@@ -164,7 +208,7 @@ export default {
         loader.hide();
         if (res.success) {
           this.Getbooks();
-           this.$toasted.global.my_messges({ message: res.message });
+          this.$toasted.global.my_messges({ message: res.message });
         } else {
           this.$toasted.global.my_messges({ message: res.message });
         }
@@ -178,6 +222,6 @@ table {
   color: white !important;
 }
 .form-control {
-    height: calc(1.5em + 0.86rem + 2px) !important;
-  }
+  height: calc(1.5em + 0.86rem + 2px) !important;
+}
 </style>

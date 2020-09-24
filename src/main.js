@@ -23,9 +23,11 @@ import VueMoment from 'vue-moment'
 import { BootstrapVue } from 'bootstrap-vue';
 import Toasted from 'vue-toasted';
 import Loading from 'vue-loading-overlay';
-import Vuelidate from 'vuelidate'
+import Vuelidate from 'vuelidate';
 // Import stylesheet
 import 'vue-loading-overlay/dist/vue-loading.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 let option = {
     theme: "bubble", 
@@ -51,6 +53,8 @@ Vue.use(BootstrapVue)
 Vue.use(NowUiKit);
 Vue.use(Loading);
 Vue.use(Vuelidate);
+Vue.use(BootstrapVue)
+ 
 new Vue({
   router,
   render: h => h(App)

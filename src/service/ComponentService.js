@@ -17,14 +17,14 @@ export default {
     updateBook(data) {
         return axios.put(this.API_URL+'book/'+data._id,data,{headers:this.header}).then(res => res.data);
     },
-    getBooks() {
-        return axios.get(this.API_URL+'book',{headers:this.header}).then(res => res.data);
+    getBooks(page,pageSize) {
+        return axios.get(this.API_URL+'book?itemPerPage='+pageSize+'&page='+page,{headers:this.header}).then(res => res.data);
     },
     deleteBook(id) {
         return axios.delete(this.API_URL+'book/'+id,{headers:this.header}).then(res => res.data);
     },
-    getTeachers() {
-        return axios.get(this.API_URL+'teacher',{headers:this.header}).then(res => res.data);
+    getTeachers(page,pageSize) {
+        return axios.get(this.API_URL+'teacher?itemPerPage='+pageSize+'&page='+page,{headers:this.header}).then(res => res.data);
     },
     addTeacher(data) {
         return axios.post(this.API_URL+'teacher',data,{headers:this.header}).then(res => res.data);
