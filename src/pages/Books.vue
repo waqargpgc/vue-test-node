@@ -62,6 +62,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
+              <th><input type="checkbox" v-model="selectAll" @click="selectAllBooks()" /></th>
               <th>S.NO</th>
               <th>Book Name</th>
               <th>Auther Name</th>
@@ -72,6 +73,7 @@
           </thead>
           <tbody>
             <tr v-for="(book, index) in BookLists" :key="book._id">
+              <td><input type="checkbox" v-model="book.select" /></td>
               <td>{{ index + 1 }}</td>
               <td>{{ book.b_name }}</td>
               <td>{{ book.b_auther }}</td>
@@ -121,8 +123,9 @@ export default {
   data() {
     return {
       page: 1,
-      pageSize: 10,
+      pageSize: 7,
       totalElement: 0,
+      selectAll: false,
       Book: {
         b_name: "",
         b_auther: "",
@@ -138,6 +141,12 @@ export default {
   methods: {
     updatePage(page) {
       this.Getbooks();
+    },
+     selectAllBooks:function() {
+       this.selectAll = !this.selectAll;
+      this.BookLists.forEach((element) => {
+        element.select = this.selectAll;
+      });
     },
     insertManyBooks() {
       //const values = this.Book;

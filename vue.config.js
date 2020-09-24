@@ -4,7 +4,7 @@ module.exports = {
   //   sourceMap: process.env.NODE_ENV !== 'production'
   // },
   devServer: {
-  //  proxy: 'http://localhost:4000/',
-    proxy: 'https://node-test-app-v1.herokuapp.com/',
+    proxy: 'http://localhost:4001/',
+   // proxy: 'https://node-test-app-v1.herokuapp.com/',
 }
 };

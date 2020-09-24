@@ -86,7 +86,7 @@
         <table class="table table-striped">
           <thead>
             <tr>
-              <th><input type="checkbox" @click="selectAllTeachers()" /></th>
+              <th><input type="checkbox" v-model="selectAll" @click="selectAllTeachers()" /></th>
               <th>S.NO</th>
               <th>Teacher Name</th>
               <th>Teacher Phone</th>
@@ -147,8 +147,9 @@ export default {
   data() {
     return {
       page: 1,
-      pageSize: 10,
+      pageSize: 7,
       totalElement: 0,
+      selectAll: false,
       Teacher: {
         t_name: "",
         t_email: "",
@@ -169,9 +170,10 @@ export default {
     updatePage(page) {
       this.GetTeachers();
     },
-    selectAllTeachers() {
-      this.TeacherList.teachers.forEach((element) => {
-        element.select = true;
+    selectAllTeachers:function() {
+       this.selectAll = !this.selectAll;
+      this.TeacherList.forEach((element) => {
+        element.select = this.selectAll;
       });
     },
     insertManyTeachers() {
