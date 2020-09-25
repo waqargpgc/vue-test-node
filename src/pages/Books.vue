@@ -123,7 +123,7 @@ export default {
   data() {
     return {
       page: 1,
-      pageSize: 7,
+      pageSize: 2,
       totalElement: 0,
       selectAll: false,
       Book: {
