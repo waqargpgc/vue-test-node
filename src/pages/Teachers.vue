@@ -147,7 +147,7 @@ export default {
   data() {
     return {
       page: 1,
-      pageSize: 2,
+      pageSize: 5,
       totalElement: 0,
       selectAll: false,
       Teacher: {
